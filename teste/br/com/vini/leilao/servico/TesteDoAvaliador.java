@@ -1,4 +1,4 @@
-package br.com.vini.leilao.teste;
+package br.com.vini.leilao.servico;
 
 import org.junit.Assert;
 import org.junit.Test;
