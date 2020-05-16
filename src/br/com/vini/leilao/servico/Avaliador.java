@@ -46,7 +46,7 @@ public class Avaliador {
 		return menorDeTodos;
 	}
 	
-	public List<Lance> getTresMaiores() {
+	public List<Lance> getMaiores() {
 		return maiores;
 	}
 	

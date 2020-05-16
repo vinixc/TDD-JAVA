@@ -51,7 +51,7 @@ public class TesteDoAvaliador {
 		leilaoPs3.propoe(new Lance(joao, 250.0));
 		leilaoPs3.propoe(new Lance(jose, 300.0));
 		leilaoPs3.propoe(new Lance(maria, 400.0));
-		leilaoPs3.propoe(new Lance(maria, 400.0));
+		leilaoPs3.propoe(new Lance(joao, 400.0));
 		leilaoPs3.propoe(new Lance(maria, 400.0));
 		
 		double valorMedioReturn = leiloeiro.getValorMedio(leilaoPs3);
@@ -78,13 +78,68 @@ public class TesteDoAvaliador {
 		leilaoPs3.propoe(new Lance(maria, 200.0));
 		leilaoPs3.propoe(new Lance(joao, 300.0));
 		leilaoPs3.propoe(new Lance(maria, 400.0));
+		leilaoPs3.propoe(new Lance(joao, 500.0));
 		
 		leiloeiro.avalia(leilaoPs3);
 		
-		List<Lance> tresMaiores = leiloeiro.getTresMaiores();
+		List<Lance> tresMaiores = leiloeiro.getMaiores();
 		assertEquals(3, tresMaiores.size());
-		assertEquals(400.0, tresMaiores.get(0).getValor(),0.00001);
-		assertEquals(300.0, tresMaiores.get(1).getValor(),0.00001);
-		assertEquals(200.0, tresMaiores.get(2).getValor(),0.00001);
+		assertEquals(500.0, tresMaiores.get(0).getValor(),0.00001);
+		assertEquals(400.0, tresMaiores.get(1).getValor(),0.00001);
+		assertEquals(300.0, tresMaiores.get(2).getValor(),0.00001);
 	}
+	
+	@Test
+	public void deveRetornarDoisLances() {
+		leilaoPs3.propoe(new Lance(maria, 200));
+		leilaoPs3.propoe(new Lance(joao,  300));
+		
+		leiloeiro.avalia(leilaoPs3);
+		
+		List<Lance> maiores = leiloeiro.getMaiores();
+		assertEquals(2, maiores.size());
+		
+		assertEquals(300.0, maiores.get(0).getValor(), 0.00001);
+		assertEquals(200.0, maiores.get(1).getValor(), 0.00001);
+	}
+	
+	@Test
+	public void deveRetornarListaVazia() {
+		
+		leiloeiro.avalia(leilaoPs3);
+		
+		List<Lance> list = leiloeiro.getMaiores();
+		
+		assertEquals(0, list.size());
+	}
+	
+	@Test
+    public void deveReceberUmLance() {
+        assertEquals(0, leilaoPs3.getLances().size());
+
+        leilaoPs3.propoe(new Lance(joao, 2000));
+
+        assertEquals(1, leilaoPs3.getLances().size());
+        assertEquals(2000.0, leilaoPs3.getLances().get(0).getValor(), 0.00001);
+    }
+
+    @Test
+    public void deveReceberVariosLances() {
+    	leilaoPs3.propoe(new Lance(maria, 2000));
+    	leilaoPs3.propoe(new Lance(joao, 3000));
+
+        assertEquals(2, leilaoPs3.getLances().size());
+        assertEquals(2000.0, leilaoPs3.getLances().get(0).getValor(), 0.00001);
+        assertEquals(3000.0, leilaoPs3.getLances().get(1).getValor(), 0.00001);
+    }
+    
+    @Test
+    public void naoDeveAceitarDoisLancesSeguidosDoMesmoUsuario() {
+
+    	leilaoPs3.propoe(new Lance(joao, 2000.0));
+    	leilaoPs3.propoe(new Lance(joao, 3000.0));
+
+        assertEquals(1, leilaoPs3.getLances().size());
+        assertEquals(2000.0, leilaoPs3.getLances().get(0).getValor(), 0.00001);
+    }
 }
