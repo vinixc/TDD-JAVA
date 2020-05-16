@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import br.com.vini.leilao.dominio.Lance;
@@ -12,21 +13,29 @@ import br.com.vini.leilao.dominio.Usuario;
 
 public class TesteDoAvaliador {
 	
+	private Usuario joao;
+	private Usuario jose;
+	private Usuario maria;
+	private Leilao leilaoPs3;
+	private Avaliador leiloeiro;
+
+	@Before
+	public void init() {
+		joao = new Usuario("joao");
+		jose = new Usuario("jose");
+		maria = new Usuario("maria");
+		leilaoPs3 = new Leilao("Play 3 Novo");
+		leiloeiro = new Avaliador();
+	}
+	
 	@Test
 	public void deveEntenderLancesEmOrdemCrescente() {
-		Usuario joao = new Usuario("joao");
-		Usuario jose = new Usuario("jose");
-		Usuario maria = new Usuario("maria");
 		
-		Leilao leilao = new Leilao("Play 3 Novo");
+		leilaoPs3.propoe(new Lance(joao, 250.0));
+		leilaoPs3.propoe(new Lance(jose, 300.0));
+		leilaoPs3.propoe(new Lance(maria, 400.0));
 		
-		leilao.propoe(new Lance(joao, 250.0));
-		leilao.propoe(new Lance(jose, 300.0));
-		leilao.propoe(new Lance(maria, 400.0));
-		
-		Avaliador leiloeiro = new Avaliador();
-		
-		leiloeiro.avalia(leilao);
+		leiloeiro.avalia(leilaoPs3);
 		
 		double maiorEsperado = 400;
 		double menorEsperado = 250;
@@ -39,21 +48,13 @@ public class TesteDoAvaliador {
 	@Test
 	public void testaValorMedioLeilao() {
 		
-		Usuario joao = new Usuario("joao");
-		Usuario jose = new Usuario("jose");
-		Usuario maria = new Usuario("maria");
+		leilaoPs3.propoe(new Lance(joao, 250.0));
+		leilaoPs3.propoe(new Lance(jose, 300.0));
+		leilaoPs3.propoe(new Lance(maria, 400.0));
+		leilaoPs3.propoe(new Lance(maria, 400.0));
+		leilaoPs3.propoe(new Lance(maria, 400.0));
 		
-		Leilao leilao = new Leilao("Play 3 Novo");
-		
-		leilao.propoe(new Lance(joao, 250.0));
-		leilao.propoe(new Lance(jose, 300.0));
-		leilao.propoe(new Lance(maria, 400.0));
-		leilao.propoe(new Lance(maria, 400.0));
-		leilao.propoe(new Lance(maria, 400.0));
-		
-		Avaliador leiloeiro = new Avaliador();
-		
-		double valorMedioReturn = leiloeiro.getValorMedio(leilao);
+		double valorMedioReturn = leiloeiro.getValorMedio(leilaoPs3);
 		double valorMedioEsperado = 350;
 		
 		assertEquals(valorMedioEsperado, valorMedioReturn, 0.00001);
@@ -61,12 +62,10 @@ public class TesteDoAvaliador {
 	
 	@Test
 	public void deveEntenderLeilaoComApenasUmLance() {
-		Usuario joao = new Usuario("joao");
-		Leilao leilao = new Leilao("Play 3 Novo");
-		leilao.propoe(new Lance(joao, 1000.0));
+
+		leilaoPs3.propoe(new Lance(joao, 1000.0));
 		
-		Avaliador leiloeiro = new Avaliador();
-		leiloeiro.avalia(leilao);
+		leiloeiro.avalia(leilaoPs3);
 		
 		assertEquals(1000.0, leiloeiro.getMaiorLance(), 0.00001);
 		assertEquals(1000.0, leiloeiro.getMenorLance(), 0.00001);
@@ -74,19 +73,13 @@ public class TesteDoAvaliador {
 	
 	@Test
 	public void deveEncontrarOsTresMaioresLance() {
-		Usuario joao = new Usuario("joao");
-		Usuario maria = new Usuario("maria");
 		
-		Leilao leilao = new Leilao("Play 3 Novo");
+		leilaoPs3.propoe(new Lance(joao, 100.0));
+		leilaoPs3.propoe(new Lance(maria, 200.0));
+		leilaoPs3.propoe(new Lance(joao, 300.0));
+		leilaoPs3.propoe(new Lance(maria, 400.0));
 		
-		leilao.propoe(new Lance(joao, 100.0));
-		leilao.propoe(new Lance(maria, 200.0));
-		leilao.propoe(new Lance(joao, 300.0));
-		leilao.propoe(new Lance(maria, 400.0));
-		
-		Avaliador leiloeiro = new Avaliador();
-		
-		leiloeiro.avalia(leilao);
+		leiloeiro.avalia(leilaoPs3);
 		
 		List<Lance> tresMaiores = leiloeiro.getTresMaiores();
 		assertEquals(3, tresMaiores.size());
@@ -94,5 +87,4 @@ public class TesteDoAvaliador {
 		assertEquals(300.0, tresMaiores.get(1).getValor(),0.00001);
 		assertEquals(200.0, tresMaiores.get(2).getValor(),0.00001);
 	}
-
 }

@@ -21,6 +21,10 @@ public class Avaliador {
 			if(lance.getValor() < menorDeTodos ) menorDeTodos = lance.getValor();
 		}
 		
+		pegaOsTresMaiores(leilao);
+	}
+
+	private void pegaOsTresMaiores(Leilao leilao) {
 		maiores = new ArrayList<Lance>(leilao.getLances());
 		Collections.sort(maiores, new Comparator<Lance>() {
 			
