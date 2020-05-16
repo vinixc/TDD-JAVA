@@ -1,5 +1,7 @@
 package br.com.vini.leilao.servico;
 
+import java.text.DecimalFormat;
+
 import br.com.vini.leilao.dominio.Lance;
 import br.com.vini.leilao.dominio.Leilao;
 
@@ -22,5 +24,14 @@ public class Avaliador {
 	public double getMenorLance() {
 		return menorDeTodos;
 	}
-
+	
+	public double getValorMedio(Leilao leilao) {
+		double valorTotalLeiao = leilao.getLances().stream()
+			.map(m -> m.getValor())
+			.reduce(0.0, (x,y) -> x + y).doubleValue();
+		
+		double valorMedio = valorTotalLeiao / leilao.getLances().size();
+		DecimalFormat format = new DecimalFormat("0.##");
+		return Double.parseDouble(format.format(valorMedio).replace(",", "."));
+	}
 }
